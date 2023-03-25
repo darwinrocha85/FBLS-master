@@ -1,0 +1,8 @@
+correr proyecto TesisUSB
+
+pyenv activate FBLS
+
+cd ~/TesisUSBMaster/MultimodalEmotionFusionUnifyFBLS
+
+python python run_all.py deep_fusion 0 2
+
