@@ -64,17 +64,28 @@ def bls_train(
 
         # K-means clustering
         fcm = cmeans(train_x, NumRule, 0.5, error=0.005, maxiter=100)
-        center = fcm[0].T
+        center = fcm[0]
 
         CENTER.append(center)
 
         for j in range(train_x.shape[0]):
+            ten2 = np.tile(train_x[j, :], (NumRule, 1))
+            ten = len(train_x[j])
             MF = np.exp(
-                -np.power(np.tile(train_x[j, :], (NumRule, 1)) - center, 2) / std
+                -np.power(
+                    np.subtract(
+                        ten2,
+                        np.tile(center[:, j], (ten, 1)).T,
+                    ),
+                    2,
+                )
+                / std
             )
             MF = np.prod(MF, axis=1)
             MF = MF / np.sum(MF)
-            t_y[j, :] = np.multiply(MF, np.dot(train_x[j, :], b1))
+            temP = np.dot(train_x[j, :], b1)
+
+            t_y[j, :] = MF[0] * temP[0]
 
         [T1, ps1] = mapminmax(t_y, 0, 1)
         ps.append(ps1)
@@ -120,10 +131,10 @@ def bls_train(
         t_y = np.zeros((test_x.shape[0], NumRule))
         center = CENTER[i]
         for j in range(test_x.shape[0]):
-            MF = np.exp(-((np.tile(test_x[j, :], (NumRule, 1)) - center) ** 2) / std)
+            MF = np.exp(-((np.tile(test_x[j, :], (NumRule, 1)) - center.T) ** 2) / std)
             MF = np.prod(MF, axis=1)
             MF = MF / np.sum(MF)
-            t_y[j, :] = MF * (test_x[j, :] @ b1)
+            t_y[j, :] = MF[0] * (test_x[j, :] @ b1)[0]
 
         ps1 = ps[i]
         scaler = MinMaxScaler()
@@ -200,9 +211,9 @@ C = 2**-30  # C: the regularization parameter for sparse regularization
 s = 0.8  # s: the shrinkage parameter for enhancement nodes
 best = 0.72
 result = []
-for NumRule in range(1, 5):  # searching range for fuzzy rules per fuzzy subsystem
+for NumRule in range(1, 2):  # searching range for fuzzy rules per fuzzy subsystem
     for NumFuzz in range(1, 5):  # searching range for number of fuzzy subsystems
-        for NumEnhan in range(1, 5):  # searching range for enhancement nodes
+        for NumEnhan in range(1, 50):  # searching range for enhancement nodes
             print(
                 f"Fuzzy rule No. = {NumRule}, Fuzzy system No. = {NumFuzz}, Enhan. No. = {NumEnhan}"
             )
