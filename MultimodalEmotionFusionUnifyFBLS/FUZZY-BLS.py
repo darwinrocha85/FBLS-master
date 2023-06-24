@@ -213,7 +213,7 @@ best = 0.72
 result = []
 for NumRule in range(1, 2):  # searching range for fuzzy rules per fuzzy subsystem
     for NumFuzz in range(1, 5):  # searching range for number of fuzzy subsystems
-        for NumEnhan in range(1, 50):  # searching range for enhancement nodes
+        for NumEnhan in range(1, 5):  # searching range for enhancement nodes
             print(
                 f"Fuzzy rule No. = {NumRule}, Fuzzy system No. = {NumFuzz}, Enhan. No. = {NumEnhan}"
             )
