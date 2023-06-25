@@ -6,16 +6,15 @@ import random
 
 class createdData():
     @staticmethod
-    def creadtes_file(self, dataset_input, type_data_input="training", porcentaje_input=0.5):
+    def creadtes_file(dataset_input, type_data_input="training", porcentaje_input=0.5):
         array_data = []
-        for bacth in enumerate(dataset_input):
+        for bacth in dataset_input:
             face = bacth['face'].numpy()
             audio = bacth['audio'].numpy()
             text = bacth['text'].numpy()
             label = torch.argmax(bacth['label'], dim=-1).numpy()
             label = np.ravel(label)
-            data_set = np.concatenate([max(face), max(audio), max(text), label])
-            array_data.append(data_set)
+            array_data.append([min(face), max(audio), min(text), max(label)])
 
         # Obtener el tamaño de la lista y calcular la cantidad de elementos para cada porcentaje
         total_elements = len(array_data)
